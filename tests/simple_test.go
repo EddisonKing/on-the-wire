@@ -16,12 +16,12 @@ func TestGobEncodedPipelineForInt(t *testing.T) {
 
 	read, write := otw.New[int]().Build()
 
-	n1, err := write(someNumber, buffer)
+	err := write(someNumber, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someNumber, i)
 }
 
@@ -32,12 +32,12 @@ func TestGobEncodedPipelineForFloat(t *testing.T) {
 
 	read, write := otw.New[float32]().Build()
 
-	n1, err := write(someFloat, buffer)
+	err := write(someFloat, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someFloat, i)
 }
 
@@ -48,12 +48,12 @@ func TestGobEncodedPipelineForBool(t *testing.T) {
 
 	read, write := otw.New[bool]().Build()
 
-	n1, err := write(someBool, buffer)
+	err := write(someBool, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someBool, i)
 }
 
@@ -64,12 +64,12 @@ func TestGobEncodedPipelineForString(t *testing.T) {
 
 	read, write := otw.New[string]().Build()
 
-	n1, err := write(someStr, buffer)
+	err := write(someStr, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someStr, i)
 }
 
@@ -78,12 +78,12 @@ func TestGobEncodedPipelineForStruct(t *testing.T) {
 
 	read, write := otw.New[TestStruct]().Build()
 
-	n1, err := write(someStruct, buffer)
+	err := write(someStruct, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someStruct, i)
 }
 
@@ -94,12 +94,12 @@ func TestJsonEncodedPipelineForInt(t *testing.T) {
 
 	read, write := otw.New[int]().UseJSONEncoding().Build()
 
-	n1, err := write(someNumber, buffer)
+	err := write(someNumber, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someNumber, i)
 }
 
@@ -110,12 +110,12 @@ func TestJsonEncodedPipelineForFloat(t *testing.T) {
 
 	read, write := otw.New[float32]().UseJSONEncoding().Build()
 
-	n1, err := write(someFloat, buffer)
+	err := write(someFloat, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someFloat, i)
 }
 
@@ -126,12 +126,12 @@ func TestJsonEncodedPipelineForBool(t *testing.T) {
 
 	read, write := otw.New[bool]().UseJSONEncoding().Build()
 
-	n1, err := write(someBool, buffer)
+	err := write(someBool, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someBool, i)
 }
 
@@ -142,12 +142,12 @@ func TestJsonEncodedPipelineForString(t *testing.T) {
 
 	read, write := otw.New[string]().UseJSONEncoding().Build()
 
-	n1, err := write(someStr, buffer)
+	err := write(someStr, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someStr, i)
 }
 
@@ -156,11 +156,11 @@ func TestJsonEncodedPipelineForStruct(t *testing.T) {
 
 	read, write := otw.New[TestStruct]().UseJSONEncoding().Build()
 
-	n1, err := write(someStruct, buffer)
+	err := write(someStruct, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someStruct, i)
 }

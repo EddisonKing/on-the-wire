@@ -3,6 +3,7 @@ package onthewire_test
 import (
 	"bytes"
 	"math/rand"
+	"strings"
 	"testing"
 
 	otw "github.com/EddisonKing/on-the-wire"
@@ -16,12 +17,11 @@ func TestAsymmetricEncryptionPipelineForInt(t *testing.T) {
 
 	read, write := otw.New[int]().UseAsymmetricEncryption(getKeys()).Build()
 
-	n1, err := write(someNumber, buffer)
+	err := write(someNumber, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
 	assert.Equal(t, someNumber, i)
 }
 
@@ -32,12 +32,11 @@ func TestAsymmetricEncryptionPipelineForFloat(t *testing.T) {
 
 	read, write := otw.New[float32]().UseAsymmetricEncryption(getKeys()).Build()
 
-	n1, err := write(someFloat, buffer)
+	err := write(someFloat, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
 	assert.Equal(t, someFloat, i)
 }
 
@@ -48,12 +47,11 @@ func TestAsymmetricEncryptionPipelineForBool(t *testing.T) {
 
 	read, write := otw.New[bool]().UseAsymmetricEncryption(getKeys()).Build()
 
-	n1, err := write(someBool, buffer)
+	err := write(someBool, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
 	assert.Equal(t, someBool, i)
 }
 
@@ -64,12 +62,11 @@ func TestAsymmetricEncryptionPipelineForString(t *testing.T) {
 
 	read, write := otw.New[string]().UseAsymmetricEncryption(getKeys()).Build()
 
-	n1, err := write(someStr, buffer)
+	err := write(someStr, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
 	assert.Equal(t, someStr, i)
 }
 
@@ -78,12 +75,11 @@ func TestAsymmetricEncryptionPipelineForStruct(t *testing.T) {
 
 	read, write := otw.New[TestStruct]().UseAsymmetricEncryption(getKeys()).Build()
 
-	n1, err := write(someStruct, buffer)
+	err := write(someStruct, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
 	assert.Equal(t, someStruct, i)
 }
 
@@ -94,12 +90,11 @@ func TestAsymmetricEncryptionJsonEncodedPipelineForInt(t *testing.T) {
 
 	read, write := otw.New[int]().UseJSONEncoding().UseAsymmetricEncryption(getKeys()).Build()
 
-	n1, err := write(someNumber, buffer)
+	err := write(someNumber, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
 	assert.Equal(t, someNumber, i)
 }
 
@@ -110,12 +105,11 @@ func TestAsymmetricEncryptionJsonEncodedPipelineForFloat(t *testing.T) {
 
 	read, write := otw.New[float32]().UseJSONEncoding().UseAsymmetricEncryption(getKeys()).Build()
 
-	n1, err := write(someFloat, buffer)
+	err := write(someFloat, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
 	assert.Equal(t, someFloat, i)
 }
 
@@ -126,12 +120,11 @@ func TestAsymmetricEncryptionJsonEncodedPipelineForBool(t *testing.T) {
 
 	read, write := otw.New[bool]().UseJSONEncoding().UseAsymmetricEncryption(getKeys()).Build()
 
-	n1, err := write(someBool, buffer)
+	err := write(someBool, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
 	assert.Equal(t, someBool, i)
 }
 
@@ -142,12 +135,11 @@ func TestAsymmetricEncryptionJsonEncodedPipelineForString(t *testing.T) {
 
 	read, write := otw.New[string]().UseJSONEncoding().UseAsymmetricEncryption(getKeys()).Build()
 
-	n1, err := write(someStr, buffer)
+	err := write(someStr, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
 	assert.Equal(t, someStr, i)
 }
 
@@ -156,11 +148,25 @@ func TestAsymmetricEncryptionJsonEncodedPipelineForStruct(t *testing.T) {
 
 	read, write := otw.New[TestStruct]().UseJSONEncoding().UseAsymmetricEncryption(getKeys()).Build()
 
-	n1, err := write(someStruct, buffer)
+	err := write(someStruct, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
 	assert.Equal(t, someStruct, i)
+}
+
+func TestAsymmetricEncryptionLongPayload(t *testing.T) {
+	buffer := bytes.NewBuffer(nil)
+
+	read, write := otw.New[string]().UseAsymmetricEncryption(getKeys()).Build()
+
+	longPayload := strings.Repeat("A", 2048)
+
+	err := write(longPayload, buffer)
+	assert.Nil(t, err)
+
+	i, err := read(buffer)
+	assert.Nil(t, err)
+	assert.Equal(t, longPayload, i)
 }

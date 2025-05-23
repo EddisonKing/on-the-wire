@@ -6,6 +6,7 @@ import (
 	"io"
 	"log/slog"
 	"math/rand"
+	"os"
 	"strings"
 	"time"
 
@@ -53,8 +54,8 @@ func getKeys() (func() *rsa.PublicKey, func() *rsa.PrivateKey) {
 }
 
 func init() {
-	logger := slog.New(slog.NewTextHandler(io.Discard, &slog.HandlerOptions{
-		Level: slog.LevelDebug,
+	logger := slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+		Level: slog.LevelError,
 	}))
 	otw.SetLogger(logger)
 }
