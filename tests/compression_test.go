@@ -16,12 +16,12 @@ func TestCompressionPipelineForInt(t *testing.T) {
 
 	read, write := otw.New[int]().UseCompression().Build()
 
-	n1, err := write(someNumber, buffer)
+	err := write(someNumber, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someNumber, i)
 }
 
@@ -32,12 +32,12 @@ func TestCompressionPipelineForFloat(t *testing.T) {
 
 	read, write := otw.New[float32]().UseCompression().Build()
 
-	n1, err := write(someFloat, buffer)
+	err := write(someFloat, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someFloat, i)
 }
 
@@ -48,12 +48,12 @@ func TestCompressionPipelineForBool(t *testing.T) {
 
 	read, write := otw.New[bool]().UseCompression().Build()
 
-	n1, err := write(someBool, buffer)
+	err := write(someBool, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someBool, i)
 }
 
@@ -64,12 +64,12 @@ func TestCompressionPipelineForString(t *testing.T) {
 
 	read, write := otw.New[string]().UseCompression().Build()
 
-	n1, err := write(someStr, buffer)
+	err := write(someStr, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someStr, i)
 }
 
@@ -78,12 +78,12 @@ func TestCompressionPipelineForStruct(t *testing.T) {
 
 	read, write := otw.New[TestStruct]().UseCompression().Build()
 
-	n1, err := write(someStruct, buffer)
+	err := write(someStruct, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someStruct, i)
 }
 
@@ -94,12 +94,12 @@ func TestCompressionJsonEncodedPipelineForInt(t *testing.T) {
 
 	read, write := otw.New[int]().UseJSONEncoding().UseCompression().Build()
 
-	n1, err := write(someNumber, buffer)
+	err := write(someNumber, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someNumber, i)
 }
 
@@ -110,12 +110,12 @@ func TestCompressionJsonEncodedPipelineForFloat(t *testing.T) {
 
 	read, write := otw.New[float32]().UseJSONEncoding().UseCompression().Build()
 
-	n1, err := write(someFloat, buffer)
+	err := write(someFloat, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someFloat, i)
 }
 
@@ -126,12 +126,12 @@ func TestCompressionJsonEncodedPipelineForBool(t *testing.T) {
 
 	read, write := otw.New[bool]().UseJSONEncoding().UseCompression().Build()
 
-	n1, err := write(someBool, buffer)
+	err := write(someBool, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someBool, i)
 }
 
@@ -142,12 +142,12 @@ func TestCompressionJsonEncodedPipelineForString(t *testing.T) {
 
 	read, write := otw.New[string]().UseJSONEncoding().UseCompression().Build()
 
-	n1, err := write(someStr, buffer)
+	err := write(someStr, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someStr, i)
 }
 
@@ -156,11 +156,11 @@ func TestCompressionJsonEncodedPipelineForStruct(t *testing.T) {
 
 	read, write := otw.New[TestStruct]().UseJSONEncoding().UseCompression().Build()
 
-	n1, err := write(someStruct, buffer)
+	err := write(someStruct, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someStruct, i)
 }

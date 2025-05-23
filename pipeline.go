@@ -3,7 +3,6 @@ package onthewire
 import (
 	"bytes"
 	"crypto/rsa"
-	"fmt"
 	"io"
 	"reflect"
 	"slices"
@@ -67,7 +66,7 @@ func New[T any]() *Pipeline[T] {
 }
 
 // Compiles the pipline into a read func and write func following the specification of the pipeline operations and selected encoders.
-func (p *Pipeline[T]) Build() (func(io.Reader) (T, int, error), func(T, io.Writer) (int, error)) {
+func (p *Pipeline[T]) Build() (func(io.Reader) (T, error), func(T, io.Writer) error) {
 	return p.readPipeline.Build(), p.writePipeline.Build()
 }
 
@@ -137,8 +136,8 @@ func (p *Pipeline[T]) UseNonce(set func() int, check func(int) bool) *Pipeline[T
 	return p
 }
 
-// Compiles the pipline into a read func and write func following the specification of the pipeline operations and selected encoders.
-func (p *ReadPipeline[R]) Build() func(io.Reader) (R, int, error) {
+// Compiles the pipline into a read func following the specification of the pipeline operations and selected encoders.
+func (p *ReadPipeline[R]) Build() func(io.Reader) (R, error) {
 	logger.Info("Building read pipeline", "NumberOfReadOperations", len(p.readOperations))
 	if p.decoder == nil {
 		logger.Warn("No encoding selected, defaulting to Gob Encoding")
@@ -151,18 +150,17 @@ func (p *ReadPipeline[R]) Build() func(io.Reader) (R, int, error) {
 
 	rlv := conditionalAddTimeoutReader(p.useTimeout, readLV, p.timeoutDuration)
 
-	readFn := func(r io.Reader) (R, int, error) {
+	readFn := func(r io.Reader) (R, error) {
 		t := *new(R)
 
 		buffer := bytes.NewBuffer(nil)
 
 		logger.Debug("Beginning to read chunks...")
-		read := 0
 		for {
 			bufferSection, n, err := rlv(r)
 			if err != nil {
 				logger.Error("Failed to read chunk", "Error", err)
-				return t, 0, err
+				return t, err
 			}
 
 			if len(bufferSection) == 0 {
@@ -170,8 +168,7 @@ func (p *ReadPipeline[R]) Build() func(io.Reader) (R, int, error) {
 			}
 
 			buffer.Write(bufferSection)
-			read += n
-			logger.Debug(fmt.Sprintf("Read %d bytes", read), "ByteCount", read)
+			logger.Debug("Read chunk bytes", "ByteCount", n)
 		}
 
 		logger.Debug("Beginning read operations")
@@ -180,7 +177,7 @@ func (p *ReadPipeline[R]) Build() func(io.Reader) (R, int, error) {
 			d, err := operation(data)
 			if err != nil {
 				logger.Error("Failed to complete read pipeline. An operation failed", "Error", err)
-				return t, 0, err
+				return t, err
 			}
 			data = d
 		}
@@ -188,11 +185,11 @@ func (p *ReadPipeline[R]) Build() func(io.Reader) (R, int, error) {
 		t, err := p.decoder(data)
 		if err != nil {
 			logger.Error("Failed to decode final bytes as required type", "Error", err)
-			return t, 0, err
+			return t, err
 		}
 
-		logger.Debug("Completed reading", "ByteCount", read)
-		return t, read, nil
+		logger.Debug("Completed reading")
+		return t, nil
 	}
 
 	return readFn
@@ -258,7 +255,7 @@ func (p *ReadPipeline[R]) UseNonce(check func(int) bool) *ReadPipeline[R] {
 }
 
 // Compiles the pipline into a read func and write func following the specification of the pipeline operations and selected encoders.
-func (p *WritePipeline[W]) Build() func(W, io.Writer) (int, error) {
+func (p *WritePipeline[W]) Build() func(W, io.Writer) error {
 	logger.Info("Building write pipeline", "NumberOfWriteOperations", len(p.writeOperations))
 	if p.encoder == nil {
 		logger.Warn("No encoding selected, defaulting to Gob Encoding")
@@ -268,11 +265,11 @@ func (p *WritePipeline[W]) Build() func(W, io.Writer) (int, error) {
 	wlv := conditionalAddTimeoutWriter(p.useTimeout, writeLV, p.timeoutDuration)
 
 	logger.Debug("Building Write function")
-	writeFn := func(t W, w io.Writer) (int, error) {
+	writeFn := func(t W, w io.Writer) error {
 		encoded, err := p.encoder(t)
 		if err != nil {
 			logger.Error("Failed to onboard data into write pipeline", "Error", err, "Type", reflect.TypeOf(t))
-			return 0, err
+			return err
 		}
 
 		logger.Debug("Beginning write operations...")
@@ -281,16 +278,16 @@ func (p *WritePipeline[W]) Build() func(W, io.Writer) (int, error) {
 			data, err = operation(data)
 			if err != nil {
 				logger.Error("Failed to complete write pipeline. An operation failed")
-				return 0, err
+				return err
 			}
 		}
 
 		logger.Debug("Beginning chunked writes...")
-		written := 0
 		for i := 0; i < len(data); i += 1024 {
 			start := i
 			end := i + 1024
 
+			written := 0
 			if end >= len(data) {
 				logger.Debug("Writing last chunk...")
 				written, err = wlv(data[start:], w)
@@ -301,19 +298,19 @@ func (p *WritePipeline[W]) Build() func(W, io.Writer) (int, error) {
 
 			if err != nil {
 				logger.Error("Failed to write chunk", "Error", err)
-				return 0, err
+				return err
 			}
-			logger.Debug(fmt.Sprintf("Written %d bytes", written), "ByteCount", written)
+			logger.Debug("Written bytes", "ByteCount", written)
 		}
 
 		// Write empty buffer to indicate to stop buffering
 		if _, err := wlv([]byte{}, w); err != nil {
 			logger.Error("Failed to write stop chunk", "Error", err)
-			return 0, err
+			return err
 		}
 
-		logger.Debug("Completed writing", "ByteCount", written)
-		return written, nil
+		logger.Debug("Completed writing")
+		return nil
 	}
 
 	return writeFn

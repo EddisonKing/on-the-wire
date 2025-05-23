@@ -19,12 +19,12 @@ func TestAsymmetricEncryptionThenCompressionGobEncoding(t *testing.T) {
 		UseCompression().
 		Build()
 
-	n1, err := write(someStruct, buffer)
+	err := write(someStruct, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someStruct, i)
 }
 
@@ -39,12 +39,12 @@ func TestCompressionThenAsymmetricEncryptionGobEncoding(t *testing.T) {
 		UseSigning(getKeys()).
 		Build()
 
-	n1, err := write(someStruct, buffer)
+	err := write(someStruct, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someStruct, i)
 }
 
@@ -59,12 +59,12 @@ func TestAsymmetricEncryptionThenCompressionJSONEncoding(t *testing.T) {
 		UseCompression().
 		Build()
 
-	n1, err := write(someStruct, buffer)
+	err := write(someStruct, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someStruct, i)
 }
 
@@ -79,11 +79,11 @@ func TestCompressionThenAsymmetricEncryptionJSONEncoding(t *testing.T) {
 		UseSigning(getKeys()).
 		Build()
 
-	n1, err := write(someStruct, buffer)
+	err := write(someStruct, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someStruct, i)
 }

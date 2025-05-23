@@ -16,12 +16,12 @@ func TestSigningPipelineForInt(t *testing.T) {
 
 	read, write := otw.New[int]().UseSigning(getKeys()).Build()
 
-	n1, err := write(someNumber, buffer)
+	err := write(someNumber, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someNumber, i)
 }
 
@@ -32,12 +32,12 @@ func TestSigningPipelineForFloat(t *testing.T) {
 
 	read, write := otw.New[float32]().UseSigning(getKeys()).Build()
 
-	n1, err := write(someFloat, buffer)
+	err := write(someFloat, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someFloat, i)
 }
 
@@ -48,12 +48,12 @@ func TestSigningPipelineForBool(t *testing.T) {
 
 	read, write := otw.New[bool]().UseSigning(getKeys()).Build()
 
-	n1, err := write(someBool, buffer)
+	err := write(someBool, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someBool, i)
 }
 
@@ -64,12 +64,12 @@ func TestSigningPipelineForString(t *testing.T) {
 
 	read, write := otw.New[string]().UseSigning(getKeys()).Build()
 
-	n1, err := write(someStr, buffer)
+	err := write(someStr, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someStr, i)
 }
 
@@ -85,12 +85,12 @@ func TestSigningPipelineForStruct(t *testing.T) {
 
 	read, write := otw.New[TestStruct]().UseSigning(getKeys()).Build()
 
-	n1, err := write(someStruct, buffer)
+	err := write(someStruct, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someStruct, i)
 }
 
@@ -101,12 +101,12 @@ func TestSigningJsonEncodedPipelineForInt(t *testing.T) {
 
 	read, write := otw.New[int]().UseJSONEncoding().UseSigning(getKeys()).Build()
 
-	n1, err := write(someNumber, buffer)
+	err := write(someNumber, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someNumber, i)
 }
 
@@ -117,12 +117,12 @@ func TestSigningJsonEncodedPipelineForFloat(t *testing.T) {
 
 	read, write := otw.New[float32]().UseJSONEncoding().UseSigning(getKeys()).Build()
 
-	n1, err := write(someFloat, buffer)
+	err := write(someFloat, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someFloat, i)
 }
 
@@ -133,12 +133,12 @@ func TestSigningJsonEncodedPipelineForBool(t *testing.T) {
 
 	read, write := otw.New[bool]().UseJSONEncoding().UseSigning(getKeys()).Build()
 
-	n1, err := write(someBool, buffer)
+	err := write(someBool, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someBool, i)
 }
 
@@ -149,12 +149,12 @@ func TestSigningJsonEncodedPipelineForString(t *testing.T) {
 
 	read, write := otw.New[string]().UseJSONEncoding().UseSigning(getKeys()).Build()
 
-	n1, err := write(someStr, buffer)
+	err := write(someStr, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someStr, i)
 }
 
@@ -170,11 +170,11 @@ func TestSigningJsonEncodedPipelineForStruct(t *testing.T) {
 
 	read, write := otw.New[TestStruct]().UseJSONEncoding().UseSigning(getKeys()).Build()
 
-	n1, err := write(someStruct, buffer)
+	err := write(someStruct, buffer)
 	assert.Nil(t, err)
 
-	i, n2, err := read(buffer)
+	i, err := read(buffer)
 	assert.Nil(t, err)
-	assert.Equal(t, n1, n2)
+
 	assert.Equal(t, someStruct, i)
 }
